@@ -16,13 +16,21 @@
             border-color: aquamarine;
             border-radius: 8px;
         }
+
+        .sunTd {
+            color: red;
+        }
+
+        .satTd {
+            color: blue;
+        }
     </style>
     <script type="text/javascript">
-        CalData = function (idx, year, month, date, schedule) {
+        CalData = function (idx, year, month, day, schedule) {
             this.idx = idx;
             this.year = year;
             this.month = month;
-            this.date = date;
+            this.day = day;
             this.schedule = schedule;
         }
 
@@ -40,6 +48,12 @@
             today = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate());
             buildCalendar();
         }
+
+        function tdClick(val) {
+            var pos = document.getElementsByTagName('td')[val].childNodes[0].nodeValue;
+            console.log(val + "    " + pos);
+        }
+
 
         function buildCalendar() {
             var doMonth = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -68,21 +82,24 @@
                 //1일 부터 마지막 날까지 반복
 
                 cell = row.insertCell(); // 열 한칸씩 계속 추가
-                cell.innerHTML = i; // cell을 1부터 마지막 날까지 html 문법에 넣어줌 
-
-                row.onclick = function () {
-                    var cell = this.getElementsByTagName("td");
-                    alert("id:");
-                };
+                cell.innerHTML = i;
+                //cell.innerHTML = i; // cell을 1부터 마지막 날까지 html 문법에 넣어줌                 
+                console.log(i);
+                //               cell.onclick = function () {
+                //                   var tr = this.getElementsByTagName("tr");
+                //                   alert("id:" + cell2.innerHTML);
+                //               };
 
                 cnt = cnt + 1;
-                caldataArr.push(new CalData(i, today.getFullYear(), today.getMonth(), i, ''));
+                caldataArr.push(new CalData(i, today.getFullYear(), (today.getMonth() + 1), i, ''));
 
                 if (cnt % 7 == 1) { // 만약 cnt를 7로 나누었을때 나머지가 1이라면 (일요일 이라면)
-                    cell.innerHTML = "<font color=#ff0000>" + i;
+                    cell.innerHTML = i;
+                    cell.className = "sunTd";
                 }
                 if (cnt % 7 == 0) { //만약 cnt를 7로 나누었을때 나머지가 0이라면 (토요일이라면)
-                    cell.innerHTML = "<font color=#0000ff>" + i;
+                    cell.innerHTML = i;
+                    cell.className = "satTd";
                     row = calendar.insertRow(); // 토요일 다음에 올 셀 추가
                 }
                 /*오늘 날짜에 노란색 칠하기*/
@@ -91,11 +108,25 @@
                     cell.bgColor = "#004000";
                 }
             }
-
+            if (tbCalendar != null) {
+                for (var i = 0; i < tbCalendar.rows.length; i++) {
+                    for (var j = 0; j < tbCalendar.rows[i].cells.length; j++) {
+                        if (i > 1) {
+                            tbCalendar.rows[i].cells[j].onclick = function () {
+                                this.bgColor = "#8866dd";
+                                tableText(this);
+                            }
+                        }
+                    }
+                }
+            }
         }
 
-        function clickTdEvent() {
-            alert("click");
+        function tableText(tableCell) {
+            console.log(tableCell.innerHTML);
+            for (var i = 0; i < caldataArr.length; i++) {
+
+            }
         }
     </script>
 </head>
@@ -113,18 +144,28 @@
             <td><label onclick="nextBtn()" id="next">></label></td>
         </tr>
         <tr>
-            <td align="center">일</td>
+            <td align="center">
+                <font color="red">일</font>
+            </td>
             <td align="center">월</td>
             <td align="center">화</td>
             <td align="center">수</td>
             <td align="center">목</td>
             <td align="center">금</td>
-            <td align="center">토</td>
+            <td align="center">
+                <font color="blue">토</font>
+            </td>
         </tr>
     </table>
     <script language="javascript" type="text/javascript">
         buildCalendar();
     </script>
+    <div>
+        <script>
+
+        </script>
+    </div>
+
 </body>
 
 </html>
