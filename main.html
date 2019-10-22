@@ -37,7 +37,11 @@
         var today = new Date();
         var date = new Date();
         var caldataArr = new Array();
-
+        var clickedItem = {
+            year: '',
+            month: '',
+            date: ''
+        };
 
         function prevBtn() {
             today = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
@@ -91,7 +95,6 @@
                 //               };
 
                 cnt = cnt + 1;
-                caldataArr.push(new CalData(i, today.getFullYear(), (today.getMonth() + 1), i, ''));
 
                 if (cnt % 7 == 1) { // 만약 cnt를 7로 나누었을때 나머지가 1이라면 (일요일 이라면)
                     cell.innerHTML = i;
@@ -107,15 +110,26 @@
                     i == date.getDate()) {
                     cell.bgColor = "#edc602";
                 }
+                if (today.getFullYear() == clickedItem.year && today.getMonth() == clickedItem.month &&
+                    i == clickedItem.date) {
+                    cell.bgColor = "#4394d9";
+                }
             }
             if (tbCalendar != null) {
                 for (var i = 0; i < tbCalendar.rows.length; i++) {
                     for (var j = 0; j < tbCalendar.rows[i].cells.length; j++) {
                         if (i > 1) {
                             tbCalendar.rows[i].cells[j].onclick = function () {
+                                clickedItem = {
+                                    year: today.getFullYear(),
+                                    month: today.getMonth(),
+                                    date: this.innerHTML
+                                };
                                 setBgColor(tbCalendar, this);
                                 //this.bgColor = "#4394d9";
                                 tableText(this);
+                                console.log(clickedItem.year + "," + (clickedItem.month + 1) + "," + clickedItem
+                                    .date);
                             }
                         }
                     }
