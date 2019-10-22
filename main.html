@@ -26,11 +26,10 @@
         }
     </style>
     <script type="text/javascript">
-        CalData = function (idx, year, month, day, schedule) {
-            this.idx = idx;
+        CalData = function (year, month, date, schedule) {
             this.year = year;
             this.month = month;
-            this.day = day;
+            this.date = date;
             this.schedule = schedule;
         }
 
@@ -42,6 +41,7 @@
             month: '',
             date: ''
         };
+        var scheduleArr = new Array();
 
         function prevBtn() {
             today = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
@@ -130,6 +130,7 @@
                                 tableText(this);
                                 console.log(clickedItem.year + "," + (clickedItem.month + 1) + "," + clickedItem
                                     .date);
+                                scheduleList();
                             }
                         }
                     }
@@ -159,6 +160,34 @@
             console.log(tableCell.innerHTML);
             for (var i = 0; i < caldataArr.length; i++) {
 
+            }
+        }
+
+        function addSchedule() {
+            var input = document.getElementById('schedule_input');
+            caldataArr.push(new CalData(clickedItem.year, (clickedItem.month + 1), clickedItem.date, input.value));
+            var tr = document.createElement('tr');
+            var td = document.createElement('td');
+            td.innerHTML = input.value;
+            tr.appendChild(td);
+            document.getElementById('schedule_list').appendChild(tr);
+            input.value = "";
+            scheduleList()
+        }
+
+        function scheduleList() {
+
+            if (caldataArr.length < 0) {} else {
+                for (var i = 0; i < caldataArr.length; i++) {
+                    if (clickedItem.year == caldataArr[i].year && (clickedItem.month + 1) == caldataArr[i].month &&
+                        clickedItem.date == caldataArr[i].date) {
+                        console.log(caldataArr[i].year + "," + caldataArr[i].month + "," + caldataArr[i].date + "," +
+                            caldataArr[i]
+                            .schedule);
+
+
+                    }
+                }
             }
         }
     </script>
@@ -193,10 +222,17 @@
     <script language="javascript" type="text/javascript">
         buildCalendar();
     </script>
-    <div>
-        <script>
+    <div style="margin:30px;font-size:20px;">
+        스케줄 : <input type="text" name="schedule_input" id="schedule_input"
+            style="width:270px;height:25px;font-size:20px" />
+        <input type="button" value="등록" onclick="addSchedule()" style="width:50px;height:40px;font-size:30px" />
+    </div>
+    <div style="margin:30px;font-size:20px;">
+        <table>
+            <tbody id="schedule_list">
 
-        </script>
+            </tbody>
+        </table>
     </div>
 
 </body>
