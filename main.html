@@ -26,17 +26,16 @@
         }
     </style>
     <script type="text/javascript">
-        CalData = function (idx, year, month, day, schedule) {
-            this.idx = idx;
+        CalData = function (year, month, date, schedule) {
             this.year = year;
             this.month = month;
-            this.day = day;
+            this.date = date;
             this.schedule = schedule;
         };
 
         var today = new Date();
         var date = new Date();
-        var caldataArr = new Array();
+        var calDataArr = new Array();
         var clickedItem = {
             year: '',
             month: '',
@@ -128,6 +127,7 @@
                                 setBgColor(tbCalendar, this);
                                 //this.bgColor = "#4394d9";
                                 tableText(this);
+                                scheduleList();
                                 console.log(clickedItem.year + "," + (clickedItem.month + 1) + "," + clickedItem
                                     .date);
                             }
@@ -157,34 +157,46 @@
 
         function tableText(tableCell) {
             console.log(tableCell.innerHTML);
-            for (var i = 0; i < caldataArr.length; i++) {
+                for (var i = 0; i < calDataArr.length; i++) {
 
             }
         }
 
         function addSchedule() {
             var input = document.getElementById('schedule_input');
-            caldataArr.push(new CalData(clickedItem.year, (clickedItem.month + 1), clickedItem.date, input.value));
-            var tr = document.createElement('tr');
-            var td = document.createElement('td');
-            td.innerHTML = input.value;
-            tr.appendChild(td);
+            calDataArr.push(new CalData(clickedItem.year, (clickedItem.month + 1), clickedItem.date, input.value));
+            localStorage.setItem("calDataArr", JSON.stringify(calDataArr));
+            let tr = document.createElement('tr');
+            // let td = document.createElement('td');
+            tr.innerHTML = input.value;
+            // tr.appendChild(td);
             document.getElementById('schedule_list').appendChild(tr);
             input.value = "";
-            scheduleList()
         }
 
         function scheduleList() {
+            var storedArr = JSON.parse(localStorage.getItem("calDataArr"));
+            console.log("json : "+storedArr);
+            console.log(calDataArr.length);
+            if (calDataArr.length < 0) {
 
-            if (caldataArr.length < 0) {} else {
-                for (var i = 0; i < caldataArr.length; i++) {
-                    if (clickedItem.year == caldataArr[i].year && (clickedItem.month + 1) == caldataArr[i].month &&
-                        clickedItem.date == caldataArr[i].date) {
-                        console.log(caldataArr[i].year + "," + caldataArr[i].month + "," + caldataArr[i].date + "," +
-                            caldataArr[i]
-                                .schedule);
-
-
+            } else {
+                for (var i = 0; i < calDataArr.length; i++) {
+                    console.log("어레이에 있는거 "+calDataArr[i].year + "," + calDataArr[i].month + "," + calDataArr[i].date + "," +calDataArr[i].schedule);
+                    console.log("클릭된거"+clickedItem.year + "," + (clickedItem.month + 1) + "," + clickedItem.date);
+                    if (clickedItem.year == calDataArr[i].year && (clickedItem.month + 1) == calDataArr[i].month &&
+                        clickedItem.date == calDataArr[i].date) {
+                        let tr = document.createElement('tr');
+                        // let td = document.createElement('td');
+                        tr.innerHTML = calDataArr[i].schedule;
+                        // tr.appendChild(td);
+                        document.getElementById('schedule_list').appendChild(tr);
+                    }else{
+                        let tr = document.createElement('tr');
+                        // let td = document.createElement('td');
+                        tr.innerHTML = "스케줄이 없습니다.";
+                        // tr.appendChild(td);
+                        document.getElementById('schedule_list').appendChild(tr);
                     }
                 }
             }
@@ -226,8 +238,8 @@
                      style="width:270px;height:25px;font-size:20px" />
         <input type="button" value="등록" onclick="addSchedule()" style="width:50px;height:40px;font-size:30px" />
     </div>
-    <div style="margin:30px;font-size:20px;">
-        <table>
+    <div style="margin:30px;font-size:20px;" id="schedule_container">
+        <table id = "tbl">
             <tbody id="schedule_list">
 
             </tbody>
