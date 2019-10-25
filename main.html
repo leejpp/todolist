@@ -46,16 +46,13 @@
         function prevBtn() {
             today = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
             buildCalendar();
+            scheduleList();
         }
 
         function nextBtn() {
             today = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate());
             buildCalendar();
-        }
-
-        function tdClick(val) {
-            var pos = document.getElementsByTagName('td')[val].childNodes[0].nodeValue;
-            console.log(val + "    " + pos);
+            scheduleList();
         }
 
 
