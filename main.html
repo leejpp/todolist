@@ -36,7 +36,8 @@
         var today = new Date();
         var date = new Date();
         var calDataArr = new Array();
-        var clickedItem = {
+        let calArr = new Array();
+        let clickedItem = {
             year: '',
             month: '',
             date: ''
@@ -66,6 +67,11 @@
             var tbCalInfo = document.getElementById("calInfo");
 
             tbCalInfo.innerHTML = today.getFullYear() + "년" + (today.getMonth() + 1) + "월";
+            clickedItem = {
+                year: today.getFullYear(),
+                month: today.getMonth(),
+                date: today.getDate()
+            };
 
             while (tbCalendar.rows.length > 2) {
                 tbCalendar.deleteRow(tbCalendar.rows.length - 1);
@@ -76,7 +82,7 @@
             var cnt = 0;
             for (i = 0; i < doMonth.getDay(); i++) {
                 //이번달 일 수 만큼 반복
-                cell = row.insertCell(); // 열 한칸씩 계속 추가
+                var cell = row.insertCell(); // 열 한칸씩 계속 추가
                 cnt = cnt + 1; // 열 갯수를 계속 다음칸으로 
             }
 
@@ -114,11 +120,13 @@
                     cell.bgColor = "#4394d9";
                 }
             }
+
             if (tbCalendar != null) {
                 for (var i = 0; i < tbCalendar.rows.length; i++) {
                     for (var j = 0; j < tbCalendar.rows[i].cells.length; j++) {
                         if (i > 1) {
                             tbCalendar.rows[i].cells[j].onclick = function () {
+                                clearTable();
                                 clickedItem = {
                                     year: today.getFullYear(),
                                     month: today.getMonth(),
@@ -161,45 +169,35 @@
 
             }
         }
-
+        function clearTable(){
+            calArr = [];
+            var parent = document.getElementById('schedule_list');
+            while(parent.hasChildNodes()){
+                parent.removeChild(parent.firstChild);
+            }
+        }
         function addSchedule() {
+            clearTable();
             var input = document.getElementById('schedule_input');
             calDataArr.push(new CalData(clickedItem.year, (clickedItem.month + 1), clickedItem.date, input.value));
-            localStorage.setItem("calDataArr", JSON.stringify(calDataArr));
-            let tr = document.createElement('tr');
-            // let td = document.createElement('td');
-            tr.innerHTML = input.value;
-            // tr.appendChild(td);
-            document.getElementById('schedule_list').appendChild(tr);
+            scheduleList();
             input.value = "";
         }
 
         function scheduleList() {
-            var storedArr = JSON.parse(localStorage.getItem("calDataArr"));
-            console.log("json : "+storedArr);
-            console.log(calDataArr.length);
-            if (calDataArr.length < 0) {
-
-            } else {
-                for (var i = 0; i < calDataArr.length; i++) {
-                    console.log("어레이에 있는거 "+calDataArr[i].year + "," + calDataArr[i].month + "," + calDataArr[i].date + "," +calDataArr[i].schedule);
-                    console.log("클릭된거"+clickedItem.year + "," + (clickedItem.month + 1) + "," + clickedItem.date);
-                    if (clickedItem.year == calDataArr[i].year && (clickedItem.month + 1) == calDataArr[i].month &&
+            clearTable();
+                for (let i = 0; i < calDataArr.length; i++) {
+                   if (clickedItem.year == calDataArr[i].year && (clickedItem.month + 1) == calDataArr[i].month &&
                         clickedItem.date == calDataArr[i].date) {
-                        let tr = document.createElement('tr');
-                        // let td = document.createElement('td');
-                        tr.innerHTML = calDataArr[i].schedule;
-                        // tr.appendChild(td);
-                        document.getElementById('schedule_list').appendChild(tr);
-                    }else{
-                        let tr = document.createElement('tr');
-                        // let td = document.createElement('td');
-                        tr.innerHTML = "스케줄이 없습니다.";
-                        // tr.appendChild(td);
-                        document.getElementById('schedule_list').appendChild(tr);
+                       calArr.push(new CalData(calDataArr[i].year,calDataArr[i].month,calDataArr[i].date,calDataArr[i].schedule));
+                       console.log(calArr);
                     }
                 }
-            }
+                for(let j =0;j<calArr.length;j++){
+                    let tr = document.createElement('tr');
+                    tr.innerHTML = calArr[j].schedule;
+                    document.getElementById('schedule_list').appendChild(tr);
+                }
         }
     </script>
 </head>
